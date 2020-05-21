@@ -14,12 +14,12 @@ By default cmake does not support any target yet. If you want to generate faster
 >
 `cmake -D CMAKE_C_COMPILER=clang-10 -D CMAKE_CXX_COMPILER=clang++-10 -D CMAKE_CXX_FLAGS="-stdlib=libc++ -O3" ..`
 
-**opt**: the external components.
-**src**: the actual C++ files to be compiled into the exported library.
-**apps**: C++ subprojects to be compiled and linked based on the exported library.
-**test-suite**: C++ sub-projects used to test the library.
-**benchmark-suite**: C++ sub-projects used to test performance of the library.
-**scripts**: folder with utility scripts.
-**header**: .h files for this framework.
-**docs**: the documentation of the project.
-**private**: temporary storage for uncompleted stuff stored only locally.
+- **opt**: the external components.
+- **src**: the actual C++ files to be compiled into the exported library.
+- **apps**: C++ subprojects to be compiled and linked based on the exported library.
+- **test-suite**: C++ sub-projects used to test the library.
+- **benchmark-suite**: C++ sub-projects used to test performance of the library.
+- **scripts**: folder with utility scripts.
+- **header**: .h files for this framework.
+- **docs**: the documentation of the project.
+- **private**: temporary storage for uncompleted stuff stored only locally.
