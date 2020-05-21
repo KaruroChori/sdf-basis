@@ -5,4 +5,4 @@ file(GLOB_RECURSE SOURCES ./*.cpp)
 add_library(local_lib ${SOURCES})
 target_link_libraries(local_lib ${LIBS})
 
-set(LIBS ${LIBS} "local_lib")
+set(LIBS ${LIBS} "local_lib" CACHE INTERNAL "LIBS")
