@@ -1,5 +1,5 @@
 Basic repository to have a functional environment to start coding in, tailored to suit my needs.
-I am not a cmake expert, so I am sure many things might have been a lot cleaner, still, it does work for me so `¯\_(ツ)_/¯`.
+SDF sketch implementation.
 
 > `git submodule update --init --recursive` > `mkdir build` > `cd build` > `cmake ..` > `make all -j32`
 
