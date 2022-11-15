@@ -14,6 +14,7 @@ std::ostream& operator<<(std::ostream& out, const sketch& sk){
 }
 
 std::istream& operator>>(std::istream& in, sketch& sk){
+    //Regex used to match input patterns
     static const std::regex rgx_outline(R"(\s*OUTLINE\s+(\d+)\s*)");
     static const std::regex rgx_cut(R"(\s*CUT\s+(\d+)\s*)");
     static const std::regex rgx_point(R"(\s*(-?\d*\.?\d*)\s+(-?\d*\.?\d*)s*)");
@@ -27,8 +28,6 @@ std::istream& operator>>(std::istream& in, sketch& sk){
         std::getline(in,line);
         if(line.empty())break;
         else{
-            //std::cout<<line<<std::endl;
-
             {
                 std::smatch sm;
                 std::regex_match(line,sm,rgx_outline);
@@ -36,7 +35,8 @@ std::istream& operator>>(std::istream& in, sketch& sk){
                     if(has_outline){
                         throw "Wrong syntax. Only one outline can be defined.";
                     }
-                    //std::cout<<"New outline\n";
+                    //A hint to avoid useless resizing.
+                    sk.outline.reserve(std::stoi(sm[1]));
 
                     is_outline = true;
                     is_cut = false;
@@ -49,8 +49,9 @@ std::istream& operator>>(std::istream& in, sketch& sk){
                 std::smatch sm;
                 std::regex_match(line,sm,rgx_cut);
                 if(sm.size()!=0){
-                    //std::cout<<"New cut\n";
                     sk.cuts.push_back({});
+                    //A hint to avoid useless resizing.
+                    sk.cuts.back().reserve(std::stoi(sm[1]));
 
                     is_outline = false;
                     is_cut = true;
@@ -66,7 +67,7 @@ std::istream& operator>>(std::istream& in, sketch& sk){
                 std::smatch sm;
                 std::regex_match(line,sm,rgx_point);
                 if(sm.size()!=0){
-                    point_t pt = {std::stod(sm[1]),std::stod(sm[2])};
+                    glm::vec2 pt = {std::stod(sm[1]),std::stod(sm[2])};
                     if(is_outline){
                         sk.outline.push(pt);
                         //std::cout<<"In outline:\t"<<sm[1]<<","<<sm[2]<<"\n";
@@ -84,6 +85,9 @@ std::istream& operator>>(std::istream& in, sketch& sk){
     return in;
 }
 
-number_t sketch::operator()(const point_t&) const{
-    return -1;
+number_t sketch::operator()(const glm::vec2& v) const{
+    //Implementing the SDF operation of intersection between the inverse of the outline and all holes.
+    number_t val = -outline(v);
+    for(const auto& i:cuts)val = std::min(val,i(v));
+    return -val;
 }
